@@ -6,6 +6,8 @@ public class PlayerFirstPersonCamera : MonoBehaviour
     [SerializeField] private Transform playerHead;
     [SerializeField] private Transform cameraHeadX;
     [SerializeField] private Transform cameraHeadY;
+    [SerializeField] private Transform flashlight;
+    [SerializeField] private Transform viewmodel;
     
     private CharacterController characterController;
     private MeshRenderer meshRenderer;
@@ -20,6 +22,8 @@ public class PlayerFirstPersonCamera : MonoBehaviour
 
     public Vector3 bobbingOffset;
     public Vector3 bobbingRotation;
+    public Vector3 viewmodelOffset;
+    public Vector3 viewmodelCenter;
 
     private Vector3 center;
     private void Start()
@@ -35,6 +39,7 @@ public class PlayerFirstPersonCamera : MonoBehaviour
         this.cameraHeadY = this.cameraHeadX?.Find("Y");
         
         this.center = this.playerHead.localPosition;
+        this.viewmodelCenter = this.viewmodel.localPosition;
     }
 
     private void Bobbing()
@@ -51,6 +56,12 @@ public class PlayerFirstPersonCamera : MonoBehaviour
                     0f
                     ), 2f * Time.deltaTime);
 
+                this.viewmodelOffset = Vector3.Lerp(this.viewmodelOffset, new Vector3(
+                    Mathf.Sin(Time.time * 2f) * .02f,
+                    Mathf.Sin(Time.time * 3f) * .01f,
+                    Mathf.Sin(Time.time * 2f) * .015f
+                ), 2f * Time.deltaTime);
+                
                 this.bobbingRotation = Vector3.Lerp(
                     this.bobbingRotation,
 
@@ -60,17 +71,32 @@ public class PlayerFirstPersonCamera : MonoBehaviour
             else
             {
                 float strafeDir = this.inputManager.movementInput.x * velocity.sqrMagnitude;
+
+                Vector3 xyzSpeed = new Vector3(3f, 12f, 6f);
+                Vector3 xyzRotation = new Vector3(12f, 0f, 6f);
+                if (this.movementMain.isSprinting)
+                {
+                    xyzSpeed = new Vector3(4f, 16f, 8f);
+                    xyzRotation = new Vector3(18f, 0f, 8f);
+                }
                 
                 this.bobbingOffset = Vector3.Lerp(this.bobbingOffset, new Vector3(
-                    Mathf.Cos((Time.time + 12f) * 3f) * .2f,
-                    Mathf.Cos(Time.time * 12f) * .4f,
-                    Mathf.Sin((Time.time + 6f) * 6f) * .7f
+                    Mathf.Cos((Time.time + 12f) * xyzSpeed.x) * .2f,
+                    Mathf.Cos(Time.time * xyzSpeed.y) * .04f,
+                    Mathf.Sin((Time.time + 6f) * xyzSpeed.z) * .7f
                 ), 2f * Time.deltaTime) * Mathf.Clamp(velocity.magnitude/this.movementMain.speed, .1f, 1f);
+                
+                this.viewmodelOffset = Vector3.Lerp(this.viewmodelOffset, 
+                    new Vector3(
+                        0f,
+                        Mathf.Cos(Time.time * xyzSpeed.y * .2f) * .05f,
+                        Mathf.Sin((Time.time + 6f) * xyzSpeed.z * 1.25f) * -.1f),
+                    .2f);
                 
                 this.bobbingRotation = Vector3.Lerp(this.bobbingRotation, 
                     new Vector3(
-                        Mathf.Cos(Time.time * 12f) * 1f, 
-                        0f, Mathf.Sin((Time.time + 6f) * 6f) * -1f + -Mathf.Clamp(strafeDir, -5f, 5f)
+                        Mathf.Cos(Time.time * xyzRotation.x) * 1f, 
+                        0f, Mathf.Sin((Time.time + 6f) * xyzRotation.z) * -1f + -Mathf.Clamp(strafeDir, -5f, 5f)
                         ), 4f * Time.deltaTime);
             }
             
@@ -82,6 +108,12 @@ public class PlayerFirstPersonCamera : MonoBehaviour
         
         this.playerHead.localPosition = this.center + this.bobbingOffset;
         this.playerHead.localRotation = Quaternion.Euler(this.bobbingRotation);
+
+        this.viewmodel.localPosition = this.viewmodelCenter + this.viewmodelOffset;
+        this.viewmodel.localRotation = Quaternion.Euler((this.bobbingRotation + new Vector3(0f, 2f - this.bobbingRotation.z, 0f)));
+        
+        this.flashlight.localPosition = new Vector3(.2f, -.5f, 1f) - (new Vector3(this.bobbingOffset.x, this.bobbingOffset.y, 0f) * 2f);
+        this.flashlight.localRotation = Quaternion.Euler(-(this.bobbingRotation + new Vector3(0f, 2f - this.bobbingRotation.z, 0f)) * 2f);
     }
 
     private void Look()
