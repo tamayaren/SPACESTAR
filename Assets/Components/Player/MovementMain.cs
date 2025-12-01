@@ -18,6 +18,9 @@ public class MovementMain : MonoBehaviour
     {
         this.controller = GetComponent<CharacterController>();
         this.inputManager = GetComponent<InputManager>();
+
+        this.stamina = this.maxStamina;
+        
     }
 
     private void StaminaRegen()
@@ -42,6 +45,7 @@ public class MovementMain : MonoBehaviour
         
         this.isSprinting = this.inputManager.sprintKeyHeld;
         if (this.stamina <= 0f) this.isSprinting = false;
+        if (this.isSprinting) this.stamina -= this.staminaRegenRate * 3f * Time.deltaTime;
         
         Vector3 computed = (cameraForward * movement.y) + (cameraRight * movement.x);
         if (this.controller.isGrounded)
@@ -58,8 +62,6 @@ public class MovementMain : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(this.inputManager.sprintKeyHeld);
-        
         StaminaRegen();
         Move();
     }

@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: phong1
+  m_Shader: {fileID: -6465566751694194690, guid: 2b3b7d0b179748b449e12721ea4fcfa6, type: 3}
+  m_Parent: {fileID: 2100000, guid: e0dabf49a42021244b5eadb0cb9b8c85, type: 2}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_4450AB74:
+        m_Texture: {fileID: 2800000, guid: 0571bc19df95d7245adc804496895479, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - Boolean_193028D2: 1
+    - Boolean_3F1A8DAB: 1
+    - Boolean_43476D73: 1
+    - Boolean_D258FF8E: 1
+    - Vector1_B2CC132F: 8
+    - Vector1_B9994903: 2
+    - Vector1_E8746023: 4
+    - _Glossiness: 0.4472136
+    - _Smoothness: 0.4472136
+    m_Colors:
+    - _BaseColor: {r: 0.49995553, g: 0.29405388, b: 0.15583158, a: 1}
+    - _Color: {r: 0.49995548, g: 0.29405382, b: 0.15583155, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!114 &1688965524880821727
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 9

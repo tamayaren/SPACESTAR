@@ -6,17 +6,18 @@ TagManager:
   tags:
   - CameraHead
   - PlayerHead
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Entity
   - Water
   - UI
   - Viewmodel
   - Enemy
-  - 
-  - 
+  - Interactable
+  - Win
   - 
   - 
   - 

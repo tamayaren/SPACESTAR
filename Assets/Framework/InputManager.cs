@@ -19,6 +19,7 @@ public class InputManager : MonoBehaviour
     private InputAction movementAction;
     private InputAction lookAction;
     private InputAction shootAction;
+    public InputAction flashlightAction;
     
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class InputManager : MonoBehaviour
         this.sprintAction = this.inputSystemMain.FindAction("Sprint");
         this.crouchAction = this.inputSystemMain.FindAction("Crouch");
         this.shootAction = this.inputSystemMain.FindAction("Attack");
+        this.flashlightAction = this.inputSystemMain.FindAction("Flashlight");
         
         SprintInit();
         ShootInit();

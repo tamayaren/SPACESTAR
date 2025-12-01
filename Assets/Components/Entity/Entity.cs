@@ -5,8 +5,8 @@ public class Entity : MonoBehaviour
 {
     public float maxHealthIndex;
 
-    private float health;
-    private float maxHealth;
+    [SerializeField] private float health;
+    [SerializeField] private float maxHealth;
 
     public float _health
     {
@@ -30,6 +30,8 @@ public class Entity : MonoBehaviour
     public UnityEvent Dead = new UnityEvent();
     public UnityEvent<float> HealthChanged = new UnityEvent<float>();
     
-    private void Start() =>
+    private void Awake()  {
+        this.maxHealth = this.maxHealthIndex;
         this.health = this.maxHealthIndex;
+    }
 }

@@ -1,21 +1,32 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PlayerBlinking : MonoBehaviour
 {
     [SerializeField] private Image blink;
     
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip clip; 
+    
     private float randomTime = 0f;
     private float timePassed = 0f;
 
+    public UnityEvent OnBlink = new UnityEvent();
+
     private void Start()
     {
-        this.randomTime = Random.Range(1f, 8f);    
+        this.audioSource = GetComponent<AudioSource>();
+        this.randomTime = Random.Range(1f, 4f);    
     }
 
     private void Blink()
     {
+        this.audioSource.pitch = Random.Range(0.9f, 1.1f);
+        this.audioSource.PlayOneShot(this.clip, Random.Range(0.3f, .5f));
+        
+        this.OnBlink.Invoke();
         Sequence sequence = DOTween.Sequence();
 
         sequence.Append(this.blink.DOFade(1f, .1f).SetEase(Ease.OutBounce));

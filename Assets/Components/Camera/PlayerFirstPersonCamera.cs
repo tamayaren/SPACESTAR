@@ -8,11 +8,14 @@ public class PlayerFirstPersonCamera : MonoBehaviour
     [SerializeField] private Transform cameraHeadY;
     [SerializeField] private Transform flashlight;
     [SerializeField] private Transform viewmodel;
+    [SerializeField] private AudioClip[] footsteps;
+    private Entity entity;
     
     private CharacterController characterController;
     private MeshRenderer meshRenderer;
     private MovementMain movementMain;
     
+    private AudioSource audioSource;
     private InputManager inputManager;
 
     public bool isActive = true;
@@ -25,13 +28,17 @@ public class PlayerFirstPersonCamera : MonoBehaviour
     public Vector3 viewmodelOffset;
     public Vector3 viewmodelCenter;
 
+    public bool cameraLock = true;
+
+    public bool canStep = false;
     private Vector3 center;
     private void Start()
     {
+        this.entity = GetComponent<Entity>();
         this.inputManager = GetComponent<InputManager>();
         this.meshRenderer = GetComponent<MeshRenderer>();
         this.characterController = GetComponent<CharacterController>();
-        
+        this.audioSource = GetComponent<AudioSource>();
         this.movementMain = GetComponent<MovementMain>();
         this.playerHead = GameObject.FindGameObjectWithTag("PlayerHead").transform;
         
@@ -85,7 +92,24 @@ public class PlayerFirstPersonCamera : MonoBehaviour
                     Mathf.Cos(Time.time * xyzSpeed.y) * .04f,
                     Mathf.Sin((Time.time + 6f) * xyzSpeed.z) * .7f
                 ), 2f * Time.deltaTime) * Mathf.Clamp(velocity.magnitude/this.movementMain.speed, .1f, 1f);
-                
+
+                if (this.viewmodelOffset.z < -0.05f || this.viewmodelOffset.z > 0.05f)
+                {
+                    if (this.canStep)
+                    {
+                        Debug.Log("Stepping");
+                        
+                        AudioClip clip = this.footsteps[Random.Range(0, this.footsteps.Length-1)];
+                        this.audioSource.pitch = Random.Range(0.9f, 1.1f);
+                        this.audioSource.PlayOneShot(clip, Random.Range(.4f, .7f));
+                        
+                        this.canStep = false;
+                    }
+                }
+                else
+                {
+                    this.canStep = true;
+                }
                 this.viewmodelOffset = Vector3.Lerp(this.viewmodelOffset, 
                     new Vector3(
                         0f,
@@ -118,9 +142,11 @@ public class PlayerFirstPersonCamera : MonoBehaviour
 
     private void Look()
     {
+        if (this.entity._health <= 0f) return;
         this.meshRenderer.enabled = false;
-        Cursor.lockState = CursorLockMode.Locked;
-        Vector2 lookInput = this.inputManager.lookInput * (this.sensitivity * Time.deltaTime);
+        if (this.cameraLock)
+            Cursor.lockState = CursorLockMode.Locked;
+        Vector2 lookInput = this.inputManager.lookInput * this.sensitivity;
         
         this.cameraHeadX.position = this.playerHead.position;
         
